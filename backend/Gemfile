@@ -11,7 +11,9 @@ gem "pg", "~> 1.4.4"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.6.5"
-
+gem 'dotenv-rails'
+gem 'jwt'
+gem 'rack-cors'
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
