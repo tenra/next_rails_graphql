@@ -1,6 +1,10 @@
 import { NextPage } from "next";
-import React, { useState, useEffect } from "react";
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+import React from "react";
+import axios from "axios";
+import useSWR, { useSWRConfig } from 'swr'
+// recoil
+import { useRecoilValue } from "recoil";
+import tokenState from "../recoil/atoms/tokenState";
 
 interface Post {
     id: number,
@@ -8,38 +12,34 @@ interface Post {
     caption: string
 }
 
-const options: AxiosRequestConfig = {
-    url: `${process.env.NEXT_PUBLIC_REST_URL}/posts/`,
-    method: "GET",
-};
-
 function Posts() {
-    const [posts,setPosts] = useState<Post[]>()
-    const [status, setStatus] = useState<number | null>(null);
+    const { mutate } = useSWRConfig()
+    const token = useRecoilValue(tokenState); // RecoilのTokneを取得する
 
-    useEffect(() => {
-        axios(options)
-        .then((res: AxiosResponse<Post[]>) => {
-            const { data, status } = res;
-            setPosts(data);
-            setStatus(status);
-        })
-        .catch((e: AxiosError<{ error: string }>) => {
-            console.log(e.message);
-        });
-    }, []);
+    const fetcher = async (url: string) => await axios.get(url).then((res) => res.data);
+    const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_REST_URL}/posts/`, fetcher)
+    if (error) return <div>failed to load</div>
+    if (!data) return <div>loading...</div>
 
     return (
         <>
-            <h2>投稿一覧</h2>
-            <h3>ステータス:{status}</h3>
-            {posts?.map((post: Post, index: number) => 
+            <h2>投稿一覧</h2>            
+            {data &&
+                data.map((post: Post, index: number) => (
                 <div key={index}>
                     <span>{post.id}</span>
                     <span>{post.title}</span>
                     <span>{post.caption}</span>
+                    <button onClick={ async ()=>{
+                        await axios.delete(`${process.env.NEXT_PUBLIC_REST_URL}/posts/`+ post.id,{
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            }
+                        });
+                        mutate(`${process.env.NEXT_PUBLIC_REST_URL}/posts/`)
+                    }}>削除</button>
                 </div>
-            )}
+            ))}
         </>
     )
 }

@@ -33,9 +33,7 @@ const LoginPage: NextPage = () => {
                     <button onClick={() => logout({ returnTo: window.location.origin })}>
                         ログアウト
                     </button>
-                    <button
-                        onClick={() => {router.push("/blog");}}
-                    >
+                    <button onClick={() => {router.push("/blog");}}>
                         記事投稿ページへ
                     </button>
                 </>

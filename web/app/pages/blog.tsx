@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
+import { useSWRConfig } from 'swr'
 import Posts from '../components/Posts'
 // recoil
 import { useRecoilValue } from "recoil";
@@ -12,6 +13,8 @@ const BlogPage: NextPage = () => {
 
     const [title, setTitle] = useState<string>("");
     const [caption, setCaption] = useState<string>("");
+
+    const { mutate } = useSWRConfig()
 
     const onClick = () => {
         const params = {
@@ -27,6 +30,8 @@ const BlogPage: NextPage = () => {
         })
         .then((res) => {
             console.log(res);
+            // SWRで再検証
+            mutate(`${process.env.NEXT_PUBLIC_REST_URL}/posts/`)
         })
         .catch((error) => {
             console.log(error);
