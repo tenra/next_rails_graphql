@@ -1,10 +1,9 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link';
 import styles from '../styles/Home.module.css'
-import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Home() {
-  const { loginWithRedirect } = useAuth0();
 
   return (
     <div className={styles.container}>
@@ -16,9 +15,11 @@ export default function Home() {
 
       <main className={styles.main}>
         <div>
-          <button onClick={() => loginWithRedirect()}>ログイン</button>
+          <Link href="/login">login</Link>
         </div>
-        
+        <div>
+          <Link href="/blog">blog</Link>
+        </div>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
