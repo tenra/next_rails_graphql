@@ -3,7 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link';
 import styles from '../styles/Home.module.scss'
 
-import CalendarWrapper from '../components/Calendar/CalendarWrapper'
+import Calendar from '../components/Calendar/Calendar'
+import ContextWrapper from "../context/ContextWrapper";
 
 export default function Home() {
 
@@ -23,7 +24,10 @@ export default function Home() {
           <Link href="/blog">blog</Link>
         </div>
 
-        <CalendarWrapper />
+        <ContextWrapper>
+          <Calendar />
+        </ContextWrapper>
+
 
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>

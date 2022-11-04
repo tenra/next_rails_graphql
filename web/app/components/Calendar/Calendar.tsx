@@ -1,16 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { getMonth } from "../../util/day";
 import { CalendarHeader } from "./CalendarHeader";
 import { Sidebar } from "./Sidebar";
 import { Month } from "./Month";
+import { EventModal } from "./EventModal";
+import GlobalContext from "../../context/GlobalContext";
 
 
 
-function CalendarWrapper() {
+function Calendar() {
   const [currentMonth, setCurrentMonth] = useState(getMonth());
+  const { monthIndex, showEventModal } = useContext(GlobalContext);
+
+  useEffect(() => {
+    setCurrentMonth(getMonth(monthIndex));
+  }, [monthIndex]);
 
   return (
     <>
+      {showEventModal && <EventModal />}
       <div className="h-screen flex flex-col w-full">
         <CalendarHeader />
         <div className="flex flex-1">
@@ -22,4 +30,4 @@ function CalendarWrapper() {
   );
 }
 
-export default CalendarWrapper;
+export default Calendar;
